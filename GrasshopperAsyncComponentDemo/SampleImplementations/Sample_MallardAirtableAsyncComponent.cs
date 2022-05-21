@@ -51,7 +51,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
     public class MallardAirtableWorker : WorkerInstance
     {
-
+        //test
         public string baseID = "";
         public string appKey = "";
         public string tablename = "";
@@ -59,7 +59,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public string errorMessageString = "Set Refresh Input to 'True'";
         public string attachmentFieldName = "Name";
         public List<Object> records = new List<object>();
-        public string offset = null;
+        public string offset = "0";
         public IEnumerable<string> fieldsArray = null;
         public string filterByFormula = null;
         public int? maxRecords = null;
@@ -76,13 +76,12 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
         public MallardAirtableWorker() : base(null) { }
 
-        public async Task ListRecordsMethodAsync(AirtableBase airtableBase, string offset, IGH_DataAccess DA)
+        public async Task ListRecordsMethodAsync(AirtableBase airtableBase, string offset)
         {
             if (CancellationToken.IsCancellationRequested) { return; }
 
             do
             {
-
                 if (CancellationToken.IsCancellationRequested) { return; }
 
                 Task<AirtableListRecordsResponse> task = airtableBase.ListRecords(
@@ -96,6 +95,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
                        view);
 
                 AirtableListRecordsResponse response = await task;
+
                 task.Wait();
                 errorMessageString = task.Status.ToString();
 
@@ -129,8 +129,10 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         {
             // 👉 Checking for cancellation!
             if (CancellationToken.IsCancellationRequested) { return; }
-            
-            
+
+            AirtableBase airtableBase = new AirtableBase(appKey, baseID);
+            ReportProgress(Id, (int.Parse(offset)/10)+1);
+            ListRecordsMethodAsync(airtableBase, offset).Wait();
 
 
             Done();
@@ -140,20 +142,20 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
         public override void GetData(IGH_DataAccess DA, GH_ComponentParamServer Params)
         {
-            int _nthPrime = 100;
-            DA.GetData(0, ref _nthPrime);
-            if (_nthPrime > 1000000) _nthPrime = 1000000;
-            if (_nthPrime < 1) _nthPrime = 1;
+            DA.GetData(0, ref baseID);
+            DA.GetData(1, ref appKey);
+            DA.GetData(2, ref tablename);
+            DA.GetData(3, ref view);
 
-            TheNthPrime = _nthPrime;
+
         }
 
         public override void SetData(IGH_DataAccess DA)
         {
             // 👉 Checking for cancellation!
             if (CancellationToken.IsCancellationRequested) { return; }
-
-            DA.SetData(0, ThePrime);
+            DA.SetData(0, errorMessageString);
+            DA.SetDataList(1, records);
         }
     }
 
