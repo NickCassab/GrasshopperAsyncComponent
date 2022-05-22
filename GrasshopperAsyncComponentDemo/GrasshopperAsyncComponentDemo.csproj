@@ -51,6 +51,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SampleImplementations\Mallard_AirtableFieldsComponent.cs" />
     <Compile Include="SampleImplementations\Sample_MallardAirtableAsyncComponent.cs" />
     <Compile Include="SampleImplementations\Sample_PrimeCalculatorAsyncComponent.cs" />
     <Compile Include="SampleImplementations\Sample_UslessCyclesComponent.cs" />

@@ -131,7 +131,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             if (CancellationToken.IsCancellationRequested) { return; }
 
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
-            ReportProgress(Id, (int.Parse(offset)/10)+1);
+            ReportProgress(Id, (int.Parse(offset)/10)+.1);
             ListRecordsMethodAsync(airtableBase, offset).Wait();
 
 
