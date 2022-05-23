@@ -11,7 +11,7 @@ using AirtableApiClient;
 
 namespace GrasshopperAsyncComponentDemo.SampleImplementations
 {
-    public class Sample_MallardAirtableAsyncComponent : GH_AsyncComponent
+    public class Mallard_AirtableCreateComponent : GH_AsyncComponent
     {
 
         public override Guid ComponentGuid { get => new Guid("f2cfaa92-a89b-443c-8f88-43ead2341f33"); }
@@ -20,9 +20,9 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Sample_MallardAirtableAsyncComponent() : base("List Airtable Records", "Airtable List", "Pulls a list of Airtable Records.", "Samples", "Async")
+        public Mallard_AirtableCreateComponent() : base("List Airtable Records", "Airtable List", "Pulls a list of Airtable Records.", "Samples", "Async")
         {
-            BaseWorker = new MallardAirtableWorker();
+            BaseWorker = new MallardAirtableCreateWorker();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -31,12 +31,14 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             pManager.AddTextParameter("App Key", "K", "App Key for Airtable Base", GH_ParamAccess.item);
             pManager.AddTextParameter("Table Name", "T", "Name of table in Airtable Base", GH_ParamAccess.item);
             pManager.AddTextParameter("View Name", "V", "Name of View in Airtable Base", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Field Names", "FN", "Field Names of new Airtable Records", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Field", "F", "Fields of new Airtable Records", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("Error Message", "E", "Error Message string", GH_ParamAccess.item);
-            pManager.AddGenericParameter("Out Records", "O", "Out Record Result string", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Out Records", "O", "Out Record Result string", GH_ParamAccess.item);
         }
 
         public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
@@ -49,7 +51,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         }
     }
 
-    public class MallardAirtableWorker : WorkerInstance
+    public class MallardAirtableCreateWorker : WorkerInstance
     {
         //test
         public string baseID = "";
@@ -74,9 +76,9 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         int TheNthPrime { get; set; } = 100;
         long ThePrime { get; set; } = -1;
 
-        public MallardAirtableWorker() : base(null) { }
+        public MallardAirtableCreateWorker() : base(null) { }
 
-        public async Task ListRecordsMethodAsync(AirtableBase airtableBase, string offset)
+        public async Task CreateRecordsMethodAsync(AirtableBase airtableBase, string offset)
         {
             if (CancellationToken.IsCancellationRequested) { return; }
 
@@ -84,15 +86,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             {
                 if (CancellationToken.IsCancellationRequested) { return; }
 
-                Task<AirtableListRecordsResponse> task = airtableBase.ListRecords(
-                       tablename,
-                       offset,
-                       fieldsArray,
-                       filterByFormula,
-                       maxRecords,
-                       pageSize,
-                       sort,
-                       view);
+                Task<AirtableCreateUpdateReplaceRecordResponse> task = airtableBase.CreateMultipleRecords(tablename, fields, true);
 
                 AirtableListRecordsResponse response = await task;
 
@@ -132,13 +126,12 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
             ReportProgress(Id, (int.Parse(offset)/10)+.1);
-            ListRecordsMethodAsync(airtableBase, offset).Wait();
-
+            CreateRecordsMethodAsync(airtableBase, offset).Wait();
 
             Done();
         }
 
-        public override WorkerInstance Duplicate() => new MallardAirtableWorker();
+        public override WorkerInstance Duplicate() => new MallardAirtableCreateWorker();
 
         public override void GetData(IGH_DataAccess DA, GH_ComponentParamServer Params)
         {
@@ -146,8 +139,6 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             DA.GetData(1, ref appKey);
             DA.GetData(2, ref tablename);
             DA.GetData(3, ref view);
-
-
         }
 
         public override void SetData(IGH_DataAccess DA)
