@@ -22,18 +22,19 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Mallard_AirtableCreateComponent() : base("Create Airtable Records", "Airtable Create", "Creates a list of Airtable Records.", "Samples", "Async")
+        public Mallard_AirtableCreateComponent() : base("Create New Airtable Records", "Airtable Create", "Adds a list of new Airtable Records in the selected Table.", "Samples", "Async")
         {
             BaseWorker = new MallardAirtableCreateWorker();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
+            pManager.AddBooleanParameter("Toggle", "T", "Upload Toggle", GH_ParamAccess.item);
             pManager.AddTextParameter("Base ID", "ID", "ID of Airtable Base", GH_ParamAccess.item);
             pManager.AddTextParameter("App Key", "K", "App Key for Airtable Base", GH_ParamAccess.item);
             pManager.AddTextParameter("Table Name", "T", "Name of table in Airtable Base", GH_ParamAccess.item);
             pManager.AddGenericParameter("Field Names", "FN", "Field Names of new Airtable Records", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Fields", "F", "Fields of new Airtable Records", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Fields", "F", "Fields of new Airtable Records", GH_ParamAccess.tree);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -59,6 +60,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public string appKey = "";
         public string tablename = "";
         public string stringID = "";
+        public bool toggle = false;
         public string errorMessageString = "Set Refresh Input to 'True'";
         public string attachmentFieldName = "Name";
         public List<Object> records = new List<object>();
@@ -68,8 +70,11 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public bool conversion = false;
         public List<AirtableAttachment> attachmentList = new List<AirtableAttachment>();
         public AirtableRecord OutRecord = null;
-        public List<Object> fieldList = new List<Object>();
+        public Grasshopper.Kernel.Data.GH_Structure<IGH_Goo> fieldList;
         public List<String> fieldNameList = new List<string>();
+        public List<IGH_Goo> fieldTreeList = new List<IGH_Goo>();
+        public string item = "";
+        public GH_ObjectWrapper jsonitem;
 
 
         public string filterByFormula = null;
@@ -87,74 +92,116 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
         public MallardAirtableCreateWorker() : base(null) { }
 
+
+        // add toggle boolean as a check everywhere
+        // add a "duplication" check
+
         public async Task CreateRecordsMethodAsync(AirtableBase airtableBase)
         {
-
+            if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
 
-            int i = 0;
-            Fields[] fields = new Fields[fieldNameList.Count];
-            foreach (var index in indexList)
-            {
-                if (fieldList.ElementAt(index) is Grasshopper.Kernel.Types.GH_String)
-                {
-                    fields[index] = new Fields();
-                    fields[index].AddField(fieldNameList[i], fieldList.ElementAt(index).ToString());
+            int i = 0; //fieldname counter
+            int j = 0; //fieldval counter
 
-                }
-                else if (fieldList.ElementAt(index) is GH_ObjectWrapper)
+            Fields[] fields = new Fields[fieldList.Branches.ElementAt(0).Count()];
+            fieldTreeList = fieldList.Branches.ElementAt(i);
+            fields[j] = new Fields();
+
+            foreach (var fieldval in fieldTreeList)
+            {
+                i = 0;
+                fields[j] = new Fields();
+
+                foreach(var fieldname in fieldNameList)
                 {
-                    GH_ObjectWrapper wrapper = (GH_ObjectWrapper)fieldList.ElementAt(index);
-                    if (wrapper.Value is Newtonsoft.Json.Linq.JArray)
+                    IGH_Goo fieldValue = fieldList.Branches.ElementAt(i).ElementAt(j);
+
+                    if(fieldValue is null)
                     {
-                        var attList = JsonConvert.DeserializeObject<List<AirtableAttachment>>(wrapper.Value.ToString());
-                        fields[i] = new Fields();
-                        fields[i].AddField(fieldNameList[i], fieldList.ElementAt(index).ToString());
-                    }
+                        fields[j].AddField(fieldname, "null");
+
+                    } 
                     else
                     {
-                        AirtableRecord record = (AirtableRecord)wrapper.Value;
-                        string recID = record.Id;
-                        string[] recIDs = new string[1];
-                        recIDs[0] = recID;
-                        fields[i] = new Fields();
-                        fields[i].AddField(fieldNameList[i], fieldList.ElementAt(index).ToString());
+                        string fieldValueString = fieldValue.ToString();
+                        // multi select is of type array
+                        char a = fieldValueString.ElementAt(0);
+                        char b = fieldValueString.ElementAt(0);
+
+                        if (fieldValueString.StartsWith("["))
+                        {
+   
+                            string multiarray = fieldValue.ToString();
+                            multiarray.Replace("[", "");
+                            multiarray.Replace("]", "");
+                            multiarray.Replace("\"", "");
+                            fields[j].AddField(fieldname, multiarray);
+                        }                      
+                        // collaborator is of type array (try converting to json object?
+                        else
+                        {
+                            string item = fieldValue.ToString();
+                            fields[j].AddField(fieldname, item);
+                        }
+                        //else if (fieldValue.CastTo<GH_ObjectWrapper>(out jsonitem))
+                        //{
+
+                            //if (jsonitem.Value is Newtonsoft.Json.Linq.JArray)
+                            //{
+                            //    fields[j].AddField(fieldNameList[i], jsonitem.Value);
+                            //}
+                            //else
+                            //{
+                            //    AirtableRecord record = (AirtableRecord)jsonitem.Value;
+                            //    string recID = record.Id;
+                            //    string[] recIDs = new string[1];
+                            //    recIDs[j] = recID;
+                            //    fields[j].AddField(fieldNameList[i], recIDs);
+                            //}
+                        
+                        i++;
                     }
+
+                    
                 }
-                i++;
+                j++;
+
+
+
             }
 
 
-
-            Task<AirtableCreateUpdateReplaceMultipleRecordsResponse> task = airtableBase.CreateMultipleRecords(tablename, fields, true);
-
-            AirtableCreateUpdateReplaceMultipleRecordsResponse response = await task;
-
-            task.Wait();
-            errorMessageString = task.Status.ToString();
-
-            if (response.Success)
+            if (toggle) // use a toggle to trigger writing to the table
             {
-                if (CancellationToken.IsCancellationRequested) { return; }
-                errorMessageString = "Success!";//change Error Message to success here
-                records.AddRange(response.Records.ToList());
-            }
-            else if (response.AirtableApiError is AirtableApiException)
-            {
-                if (CancellationToken.IsCancellationRequested) { return; }
-                errorMessageString = response.AirtableApiError.ErrorMessage;
-            }
-            else
-            {
-                if (CancellationToken.IsCancellationRequested) { return; }
-                errorMessageString = "Unknown error";
-            }
+                Task<AirtableCreateUpdateReplaceMultipleRecordsResponse> task = airtableBase.CreateMultipleRecords(tablename, fields, true);
+                AirtableCreateUpdateReplaceMultipleRecordsResponse response = await task;
+                task.Wait();
+                errorMessageString = task.Status.ToString();
 
+                if (response.Success)
+                {
+                    if (CancellationToken.IsCancellationRequested) { return; }
+                    errorMessageString = "Success!";//change Error Message to success here
+                    records.AddRange(response.Records.ToList());
+                }
+                else if (response.AirtableApiError is AirtableApiException)
+                {
+                    if (CancellationToken.IsCancellationRequested) { return; }
+                    errorMessageString = response.AirtableApiError.ErrorMessage;
+                }
+                else
+                {
+                    if (CancellationToken.IsCancellationRequested) { return; }
+                    errorMessageString = "Unknown error";
+                }
+            }
         }
 
         public override void DoWork(Action<string, double> ReportProgress, Action Done)
         {
             // 👉 Checking for cancellation!
+            if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
             CreateRecordsMethodAsync(airtableBase).Wait();
@@ -166,17 +213,18 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
         public override void GetData(IGH_DataAccess DA, GH_ComponentParamServer Params)
         {
-            DA.GetData(0, ref baseID);
-            DA.GetData(1, ref appKey);
-            DA.GetData(2, ref tablename);
-            DA.GetDataList(3, indexList);
+            DA.GetData(0, ref toggle);
+            DA.GetData(1, ref baseID);
+            DA.GetData(2, ref appKey);
+            DA.GetData(3, ref tablename);
             DA.GetDataList(4, fieldNameList);
-            DA.GetDataList(5, fieldList);
+            DA.GetDataTree(5, out fieldList);
         }
 
         public override void SetData(IGH_DataAccess DA)
         {
             // 👉 Checking for cancellation!
+            if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
             DA.SetData(0, errorMessageString);
             DA.SetDataList(1, records);

@@ -13,7 +13,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
 
         public AirtableRecordFieldsGH() : base("Airtable Record Fields", "Fields",
-            "Retrieve a list of Fields of given Airtable Records", "Mallard", "Database")
+            "Retrieve a list of Fields of given Airtable Records", "Samples", "Async")
         {
 
         }
