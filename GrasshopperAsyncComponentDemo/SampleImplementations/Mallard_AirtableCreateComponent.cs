@@ -124,26 +124,14 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
                     } 
                     else
                     {
-                        string fieldValueString = fieldValue.ToString();
-                        // multi select is of type array
-                        char a = fieldValueString.ElementAt(0);
-                        char b = fieldValueString.ElementAt(0);
 
-                        if (fieldValueString.StartsWith("["))
-                        {
-   
-                            string multiarray = fieldValue.ToString();
-                            multiarray.Replace("[", "");
-                            multiarray.Replace("]", "");
-                            multiarray.Replace("\"", "");
-                            fields[j].AddField(fieldname, multiarray);
-                        }                      
+                        string item = fieldValue.ToString();
+                        fields[j].AddField(fieldname, item);
+
+                        // multi select is of type array
+                    
                         // collaborator is of type array (try converting to json object?
-                        else
-                        {
-                            string item = fieldValue.ToString();
-                            fields[j].AddField(fieldname, item);
-                        }
+
                         //else if (fieldValue.CastTo<GH_ObjectWrapper>(out jsonitem))
                         //{
 
@@ -176,6 +164,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             {
                 Task<AirtableCreateUpdateReplaceMultipleRecordsResponse> task = airtableBase.CreateMultipleRecords(tablename, fields, true);
                 AirtableCreateUpdateReplaceMultipleRecordsResponse response = await task;
+                
                 task.Wait();
                 errorMessageString = task.Status.ToString();
 
@@ -188,7 +177,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
                 else if (response.AirtableApiError is AirtableApiException)
                 {
                     if (CancellationToken.IsCancellationRequested) { return; }
-                    errorMessageString = response.AirtableApiError.ErrorMessage;
+                    errorMessageString = response.AirtableApiError.ErrorMessage + " - This component can only handle 10 records at a time";
                 }
                 else
                 {
