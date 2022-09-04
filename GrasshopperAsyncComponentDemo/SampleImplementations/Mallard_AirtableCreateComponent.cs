@@ -193,7 +193,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
-            CreateRecordsMethodAsync(airtableBase).Wait();
+            CreateRecordsMethodAsync(airtableBase);
 
             Done();
         }
