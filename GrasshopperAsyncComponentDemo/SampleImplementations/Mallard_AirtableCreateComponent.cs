@@ -124,7 +124,6 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
                     } 
                     else
                     {
-
                         string item = fieldValue.ToString();
                         fields[j].AddField(fieldname, item);
 
@@ -193,7 +192,12 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
-            CreateRecordsMethodAsync(airtableBase);
+            var output = CreateRecordsMethodAsync(airtableBase);
+            if(output != null)
+            {
+                output.Wait();
+            }
+
 
             Done();
         }
