@@ -89,28 +89,6 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public async Task UpdateRecordsMethodAsync(AirtableBase airtableBase)
         {
 
-            foreach (string stringID in stringIDs)
-            {
-                if (stringID != null)
-                {
-                    Task<AirtableCreateUpdateReplaceRecordResponse> task = airtableBase.UpdateRecord(tablename, fields, stringID, conversion);
-                    response = await task;
-                    if (response.Success)
-                    {
-                        errorMessage = "Success!";
-                    }
-                    else
-                    {
-                        errorMessage = response.AirtableApiError.ErrorMessage;
-                    }
-
-                }
-                else
-                {
-                    errorMessage = response.AirtableApiError.ErrorMessage;
-                }
-
-            }
         }
 
         public override void DoWork(Action<string, double> ReportProgress, Action Done)
@@ -118,20 +96,6 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             // 👉 Checking for cancellation!
             if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
-
-            // If the retrieved data is Nothing, we need to abort.
-            // We're also going to abort on a zero-length String.
-            if (airtableRecordsIN.Any())
-            {
-                foreach (AirtableRecord record in airtableRecordsIN)
-                {
-                    if (record != null)
-                    {
-                        stringIDs.Add(record.Id);
-                    }
-
-                }
-            }
 
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
             var output = UpdateRecordsMethodAsync(airtableBase);
