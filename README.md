@@ -1,7 +1,6 @@
-# Mallard2 Using GrasshopperAsyncComponent
+# Mallard2  (Airtable for Grasshopper3D)  Using GrasshopperAsyncComponent by Speckle
 
-# Mallard (Airtable for Grasshopper3D)
- Mallard is a Plug-In for Grasshopper3D that connects it to the easily editable database tool: Airtable (https://airtable.com/). It's based on the C# fork of the Airtable API by ngonicholas, please visit his page for more information https://github.com/ngocnicholas/airtable.net
+ Mallard is a Plug-In for Grasshopper3D that connects it to the easily editable database tool: Airtable (https://airtable.com/). It's based on the C# fork of the Airtable API by ngonicholas, please visit his page for more information https://github.com/ngocnicholas/airtable.net Mallard2 is rebuilt from a Fork of the GrasshopperAsyncComponent by Speckle Systems for more info see below.
  
 # How to Use the Plug-In:
 Longer Instructional Video:
