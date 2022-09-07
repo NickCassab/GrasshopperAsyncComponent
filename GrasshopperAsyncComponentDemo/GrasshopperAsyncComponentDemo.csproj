@@ -56,8 +56,6 @@
     <Compile Include="SampleImplementations\Mallard_AirtableFieldsComponent.cs" />
     <Compile Include="SampleImplementations\Mallard_AirtableCreateComponent.cs" />
     <Compile Include="SampleImplementations\Mallard_AirtableListComponent.cs" />
-    <Compile Include="SampleImplementations\Sample_PrimeCalculatorAsyncComponent.cs" />
-    <Compile Include="SampleImplementations\Sample_UslessCyclesComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Airtable">

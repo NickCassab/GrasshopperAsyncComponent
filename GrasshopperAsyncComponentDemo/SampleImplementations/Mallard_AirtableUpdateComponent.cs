@@ -81,6 +81,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public string view = "Main View";
         public int b = 1;
         public AirtableListRecordsResponse response;
+        public bool toggle = false;
         //
 
         public MallardAirtableUpdateWorker() : base(null) { }
@@ -114,7 +115,9 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             if (!DA.GetData(1, ref baseID)) { return; }
             if (!DA.GetData(2, ref appKey)) { return; }
             if (!DA.GetData(3, ref tablename)) { return; }
-            if (!DA.GetDataList(4, airtableRecordsIN)) { return; }
+            if (!DA.GetDataList(4, fieldNameList)) { return; }
+            if (!DA.GetDataList(5, fieldList)) { return; }
+            if (!DA.GetData(6, ref inputRecord)) { return; }
         }
 
         public override void SetData(IGH_DataAccess DA)
@@ -122,9 +125,12 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             // 👉 Checking for cancellation!
             if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
-            DA.SetData(0, errorMessage);
-            DA.SetDataList(1, airtableRecordsIN);
-            airtableRecordsIN.Clear();
+            DA.SetData(0, errorMessageString);
+            DA.SetData(1, OutRecord);
+            fieldList.Clear();
+            fields.FieldsCollection.Clear();
+            stringID = null;
+            inputRecord = null;
         }
     }
 
