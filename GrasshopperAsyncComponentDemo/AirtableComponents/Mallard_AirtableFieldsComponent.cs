@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Grasshopper.Kernel;
 using AirtableApiClient;
 
-namespace GrasshopperAsyncComponentDemo.SampleImplementations
+namespace Mallard2
 {
     public class AirtableRecordFieldsGH : GH_Component
     {
 
 
         public AirtableRecordFieldsGH() : base("Airtable Record Fields", "Fields",
-            "Retrieve a list of Fields of given Airtable Records", "Samples", "Async")
+            "Retrieve a list of Fields of given Airtable Records", "Mallard 2", "Airtable")
         {
 
         }
@@ -57,7 +57,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public AirtableRecord record = new AirtableRecord();
 
         //Logo for Component
-        protected override System.Drawing.Bitmap Icon { get => Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
     }
 }
 

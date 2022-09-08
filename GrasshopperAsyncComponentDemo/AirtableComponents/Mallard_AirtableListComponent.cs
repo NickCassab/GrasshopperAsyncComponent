@@ -9,18 +9,18 @@ using GrasshopperAsyncComponent;
 using System.Windows.Forms;
 using AirtableApiClient;
 
-namespace GrasshopperAsyncComponentDemo.SampleImplementations
+namespace Mallard2
 {
     public class Mallard_AirtableListComponent : GH_AsyncComponent
     {
 
         public override Guid ComponentGuid { get => new Guid("f2cfaa92-a89b-443c-8f88-43ead2341f33"); }
 
-        protected override System.Drawing.Bitmap Icon { get => Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Mallard_AirtableListComponent() : base("List Airtable Records", "Airtable List", "Pulls a list of Airtable Records.", "Samples", "Async")
+        public Mallard_AirtableListComponent() : base("List Airtable Records", "Airtable List", "Pulls a list of Airtable Records.", "Mallard 2", "Airtable")
         {
             BaseWorker = new MallardAirtableWorker();
         }

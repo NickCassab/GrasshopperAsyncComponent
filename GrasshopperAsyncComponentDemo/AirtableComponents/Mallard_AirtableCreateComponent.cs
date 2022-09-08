@@ -11,18 +11,18 @@ using AirtableApiClient;
 using Newtonsoft.Json;
 using System;
 
-namespace GrasshopperAsyncComponentDemo.SampleImplementations
+namespace Mallard2
 {
     public class Mallard_AirtableCreateComponent : GH_AsyncComponent
     {
 
         public override Guid ComponentGuid { get => new Guid("ef15ac21-0771-4a3b-af82-08072fc67ec0"); }
 
-        protected override System.Drawing.Bitmap Icon { get => Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Mallard_AirtableCreateComponent() : base("Create New Airtable Records", "Airtable Create", "Adds a list of new Airtable Records in the selected Table.", "Samples", "Async")
+        public Mallard_AirtableCreateComponent() : base("Create New Airtable Records", "Airtable Create", "Adds a list of new Airtable Records in the selected Table.", "Mallard 2", "Airtable")
         {
             BaseWorker = new MallardAirtableCreateWorker();
         }

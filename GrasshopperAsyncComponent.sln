@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrasshopperAsyncComponent", "GrasshopperAsyncComponent\GrasshopperAsyncComponent.csproj", "{114D5E49-AC13-47F7-A70E-B4289579F4E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrasshopperAsyncComponentDemo", "GrasshopperAsyncComponentDemo\GrasshopperAsyncComponentDemo.csproj", "{695D2B91-DDB6-416E-8A99-DDE6253DA7AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mallard2", "GrasshopperAsyncComponentDemo\Mallard2.csproj", "{695D2B91-DDB6-416E-8A99-DDE6253DA7AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,15 +2,15 @@
 using System.Drawing;
 using Grasshopper.Kernel;
 
-namespace GrasshopperAsyncComponentDemo
+namespace Mallard2
 {
-  public class GrasshopperAsyncComponentInfo : GH_AssemblyInfo
+  public class AirtableComponents : GH_AssemblyInfo
   {
     public override string Name
     {
       get
       {
-        return "GrasshopperAsyncComponentDemo";
+        return "Mallard2";
       }
     }
     public override Bitmap Icon
@@ -26,14 +26,14 @@ namespace GrasshopperAsyncComponentDemo
       get
       {
         //Return a short string describing the purpose of this GHA library.
-        return "A base for async & less janky grasshopper components.";
+        return "A plugin for connecting Grasshopper and Airtable in an async & less janky way.";
       }
     }
     public override Guid Id
     {
       get
       {
-        return new Guid("9c8808bc-ddee-45ca-8c66-05ca3cf4d394");
+        return new Guid("e6e5fa05-61d2-4a82-8afa-6a05cb5718b2");
       }
     }
 
@@ -42,7 +42,7 @@ namespace GrasshopperAsyncComponentDemo
       get
       {
         //Return a string identifying you or your company.
-        return "";
+        return "Nick Cassab";
       }
     }
     public override string AuthorContact
@@ -50,7 +50,7 @@ namespace GrasshopperAsyncComponentDemo
       get
       {
         //Return a string representing your preferred contact details.
-        return "";
+        return "nickcassab.com";
       }
     }
   }

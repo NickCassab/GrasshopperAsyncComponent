@@ -11,20 +11,20 @@ using AirtableApiClient;
 using Newtonsoft.Json;
 using System;
 
-namespace GrasshopperAsyncComponentDemo.SampleImplementations
+namespace Mallard2
 {
-    public class Mallard_AirtableUpdateComponent : GH_AsyncComponent
+    public class Mallard_AirtableDeleteComponent : GH_AsyncComponent
     {
 
-        public override Guid ComponentGuid { get => new Guid("84341894-1547-4ce0-ac6c-6e63bd7f66f6"); }
+        public override Guid ComponentGuid { get => new Guid("ae8fff5b-99fc-4fcf-bd95-4cfe0cb53af6"); }
 
-        protected override System.Drawing.Bitmap Icon { get => Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Mallard_AirtableUpdateComponent() : base("Update Airtable Record", "Airtable Update", "Updates an airtable record with a specific ID in a specific table", "Samples", "Async")
+        public Mallard_AirtableDeleteComponent() : base("Delete Airtable Record", "Airtable Delete", "Deletes an airtable record with a specific ID in a specific table", "Mallard 2", "Airtable")
         {
-            BaseWorker = new MallardAirtableUpdateWorker();
+            BaseWorker = new MallardAirtableDeleteWorker();
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -33,9 +33,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             pManager.AddTextParameter("Base ID", "ID", "ID of Airtable Base", GH_ParamAccess.item);
             pManager.AddTextParameter("App Key", "K", "App Key for Airtable Base", GH_ParamAccess.item);
             pManager.AddTextParameter("Table Name", "T", "Name of table in Airtable Base", GH_ParamAccess.item);
-            pManager.AddGenericParameter("Record Object", "R", "ID of Record to Update", GH_ParamAccess.item);
-            pManager.AddTextParameter("Field Name", "F", "Fieldname to update", GH_ParamAccess.item);
-            pManager.AddTextParameter("Field Value", "V", "Field Value to update to", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Record Object", "R", "ID of Record to delete", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -54,7 +52,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         }
     }
 
-    public class MallardAirtableUpdateWorker : WorkerInstance
+    public class MallardAirtableDeleteWorker : WorkerInstance
     {
         //Variable List
         bool toggle = false;
@@ -64,26 +62,22 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
         public List<String> stringIDs = new List<string>();
         public string errorMessage = "No response yet, refresh to try again";
         public string attachmentFieldName = "Name";
-        public AirtableRecord airtableRecordsIN;
+        public List<AirtableRecord> airtableRecordsIN = new List<AirtableRecord>();
         public AirtableRecord outRecord;
-        public AirtableCreateUpdateReplaceRecordResponse response;
-        public string stringID;
-        public Fields fields;
-        public string fieldname;
-        public string item;
+        public AirtableDeleteRecordResponse response;
         //
 
-        public MallardAirtableUpdateWorker() : base(null) { }
+        public MallardAirtableDeleteWorker() : base(null) { }
 
 
-        public async Task UpdateRecordsMethodAsync(AirtableBase airtableBase)
+        public async Task DeleteRecordsMethodAsync(AirtableBase airtableBase)
         {
 
+            foreach (string stringID in stringIDs)
+            {
                 if (stringID != null)
                 {
-                    fields = new Fields();
-                    fields.AddField(fieldname, item);
-                    Task<AirtableCreateUpdateReplaceRecordResponse> task = airtableBase.UpdateRecord(tablename, fields, stringID, true);
+                    Task<AirtableDeleteRecordResponse> task = airtableBase.DeleteRecord(tablename, stringID);
                     response = await task;
                     if (response.Success)
                     {
@@ -100,7 +94,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
                     errorMessage = response.AirtableApiError.ErrorMessage;
                 }
 
- 
+            }
         }
 
         public override void DoWork(Action<string, double> ReportProgress, Action Done)
@@ -111,21 +105,28 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
 
             // If the retrieved data is Nothing, we need to abort.
             // We're also going to abort on a zero-length String.
-            if (airtableRecordsIN != null)
+            if (airtableRecordsIN.Any())
             {
-                stringID = airtableRecordsIN.Id;
+                foreach (AirtableRecord record in airtableRecordsIN)
+                {
+                    if (record != null)
+                    {
+                        stringIDs.Add(record.Id);
+                    }
+
+                }
             }
 
             AirtableBase airtableBase = new AirtableBase(appKey, baseID);
-            var output = UpdateRecordsMethodAsync(airtableBase);
-            if (output != null)
+            var output = DeleteRecordsMethodAsync(airtableBase);
+            if(output != null)
             {
                 output.Wait();
             }
             Done();
         }
 
-        public override WorkerInstance Duplicate() => new MallardAirtableUpdateWorker();
+        public override WorkerInstance Duplicate() => new MallardAirtableDeleteWorker();
 
         public override void GetData(IGH_DataAccess DA, GH_ComponentParamServer Params)
         {
@@ -133,9 +134,7 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             if (!DA.GetData(1, ref baseID)) { return; }
             if (!DA.GetData(2, ref appKey)) { return; }
             if (!DA.GetData(3, ref tablename)) { return; }
-            if (!DA.GetData(4, ref airtableRecordsIN)) { return; }
-            if (!DA.GetData(5, ref fieldname)) { return; }
-            if (!DA.GetData(6, ref item)) { return; }
+            if (!DA.GetDataList(4, airtableRecordsIN)) { return; }
         }
 
         public override void SetData(IGH_DataAccess DA)
@@ -144,8 +143,8 @@ namespace GrasshopperAsyncComponentDemo.SampleImplementations
             if (!toggle) { return; }
             if (CancellationToken.IsCancellationRequested) { return; }
             DA.SetData(0, errorMessage);
-            DA.SetData(1, airtableRecordsIN);
-
+            DA.SetDataList(1, airtableRecordsIN);
+            airtableRecordsIN.Clear();
         }
     }
 
