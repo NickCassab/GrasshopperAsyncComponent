@@ -46,16 +46,16 @@
   <ItemGroup>
     <Compile Include="Info\Mallard2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="AirtableComponents\Mallard_AirtableUpdateComponent.cs" />
     <Compile Include="AirtableComponents\Mallard_AirtableDeleteComponent.cs" />
     <Compile Include="AirtableComponents\Mallard_AirtableFieldsComponent.cs" />
     <Compile Include="AirtableComponents\Mallard_AirtableCreateComponent.cs" />
     <Compile Include="AirtableComponents\Mallard_AirtableListComponent.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Airtable">
@@ -80,7 +80,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\logo32.png" />
+    <Content Include="Resources\AirtableCreate3.png" />
+    <Content Include="Resources\AirtableDelete3.png" />
+    <Content Include="Resources\AirtableFields3.png" />
+    <Content Include="Resources\AirtableList3.png" />
+    <Content Include="Resources\AirtablePluginIcon2.png" />
+    <Content Include="Resources\AirtableUpdate3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

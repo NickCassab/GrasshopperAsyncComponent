@@ -63,9 +63,59 @@ namespace GrasshopperAsyncComponentDemo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap logo32 {
+        internal static System.Drawing.Bitmap AirtableCreate3 {
             get {
-                object obj = ResourceManager.GetObject("logo32", resourceCulture);
+                object obj = ResourceManager.GetObject("AirtableCreate3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AirtableDelete3 {
+            get {
+                object obj = ResourceManager.GetObject("AirtableDelete3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AirtableFields3 {
+            get {
+                object obj = ResourceManager.GetObject("AirtableFields3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AirtableList3 {
+            get {
+                object obj = ResourceManager.GetObject("AirtableList3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AirtablePluginIcon2 {
+            get {
+                object obj = ResourceManager.GetObject("AirtablePluginIcon2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AirtableUpdate3 {
+            get {
+                object obj = ResourceManager.GetObject("AirtableUpdate3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
