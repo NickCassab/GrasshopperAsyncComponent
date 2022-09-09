@@ -57,7 +57,7 @@ namespace Mallard2
         public AirtableRecord record = new AirtableRecord();
 
         //Logo for Component
-        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.AirtableFields3; }
     }
 }
 
