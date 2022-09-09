@@ -12,8 +12,8 @@ namespace Mallard2
     {
 
 
-        public AirtableRecordFieldsGH() : base("Airtable Record Fields", "Fields",
-            "Retrieve a list of Fields of given Airtable Records", "Mallard 2", "Airtable")
+        public AirtableRecordFieldsGH() : base("Read Airtable Records", "Airtable Read",
+            "Read the Field Values for given Airtable Records", "Mallard 2", "Airtable")
         {
 
         }

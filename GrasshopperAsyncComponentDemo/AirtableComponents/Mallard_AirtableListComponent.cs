@@ -16,7 +16,7 @@ namespace Mallard2
 
         public override Guid ComponentGuid { get => new Guid("f2cfaa92-a89b-443c-8f88-43ead2341f33"); }
 
-        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.AirtableList3; }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 

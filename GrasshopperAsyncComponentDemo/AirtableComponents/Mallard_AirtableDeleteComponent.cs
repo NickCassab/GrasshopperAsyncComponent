@@ -18,11 +18,11 @@ namespace Mallard2
 
         public override Guid ComponentGuid { get => new Guid("ae8fff5b-99fc-4fcf-bd95-4cfe0cb53af6"); }
 
-        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.AirtableDelete3; }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Mallard_AirtableDeleteComponent() : base("Delete Airtable Record", "Airtable Delete", "Deletes an airtable record with a specific ID in a specific table", "Mallard 2", "Airtable")
+        public Mallard_AirtableDeleteComponent() : base("Delete Airtable Records", "Airtable Delete", "Deletes an airtable record with a specific ID in a specific table", "Mallard 2", "Airtable")
         {
             BaseWorker = new MallardAirtableDeleteWorker();
         }

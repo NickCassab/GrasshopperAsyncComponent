@@ -18,7 +18,7 @@ namespace Mallard2
       get
       {
         //Return a 24x24 pixel bitmap to represent this GHA library.
-        return null;
+        return GrasshopperAsyncComponentDemo.Properties.Resources.AirtablePluginIcon2;
       }
     }
     public override string Description

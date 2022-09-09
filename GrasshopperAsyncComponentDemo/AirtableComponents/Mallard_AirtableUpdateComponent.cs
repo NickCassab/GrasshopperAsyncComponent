@@ -18,11 +18,11 @@ namespace Mallard2
 
         public override Guid ComponentGuid { get => new Guid("84341894-1547-4ce0-ac6c-6e63bd7f66f6"); }
 
-        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.logo32; }
+        protected override System.Drawing.Bitmap Icon { get => GrasshopperAsyncComponentDemo.Properties.Resources.AirtableUpdate3; }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Mallard_AirtableUpdateComponent() : base("Update Airtable Record", "Airtable Update", "Updates an airtable record with a specific ID in a specific table", "Mallard 2", "Airtable")
+        public Mallard_AirtableUpdateComponent() : base("Update Airtable Records", "Airtable Update", "Updates an airtable record with a specific ID in a specific table", "Mallard 2", "Airtable")
         {
             BaseWorker = new MallardAirtableUpdateWorker();
         }
