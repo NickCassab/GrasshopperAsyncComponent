@@ -56,7 +56,7 @@ namespace Mallard2
         public string appKey = "";
         public string tablename = "";
         public string stringID = "";
-        public string errorMessageString = "Set Refresh Input to 'True'";
+        public string errorMessageString = "Recompute Component";
         public string attachmentFieldName = "Name";
         public List<Object> records = new List<object>();
         public string offset = "0";
